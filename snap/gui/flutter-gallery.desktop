@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Flutter Gallery
+Comment=A demo app for Flutter's material design and cupertino widgets, as well as many other features of the Flutter SDK.
+Icon=${SNAP}/meta/gui/flutter-gallery.png
+Exec=flutter-gallery %U
+Terminal=false
+Type=Application
+Categories=Development;
+Keywords=Flutter;Development;SDK;
+StartupNotify=false
