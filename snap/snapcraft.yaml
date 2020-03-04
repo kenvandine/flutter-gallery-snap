@@ -16,8 +16,6 @@ apps:
     extensions: [gnome-3-28]
     plugs:
       - opengl
-    environment:
-      LD_LIBRARY_PATH: $SNAP/bin/lib:$LD_LIBRARY_PATH
 
 parts:
   flutter:
@@ -60,6 +58,5 @@ parts:
       $SNAPCRAFT_STAGE/flutter/bin/flutter build linux --release -t lib/main_publish.dart
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
       cp -r build/linux/release/* $SNAPCRAFT_PART_INSTALL/bin/
-      #find /root/.pub-cache/ -name libunixdomainsocket.so -exec cp {} $SNAPCRAFT_PART_INSTALL/bin/lib/ \;
     build-packages:
       - clang
