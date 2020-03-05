@@ -62,3 +62,5 @@ parts:
       cp -r build/linux/release/* $SNAPCRAFT_PART_INSTALL/bin/
     build-packages:
       - clang
+    stage-packages:
+      - libegl-mesa0
