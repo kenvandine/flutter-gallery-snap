@@ -1,5 +1,5 @@
 name: flutter-gallery
-version: "0.1"
+adopt-info: flutter-gallery
 summary: Flutter Gallery
 description: |
   A demo app for Flutter's material design and cupertino widgets, as well as many other features of the Flutter SDK.
@@ -12,7 +12,7 @@ architectures:
 
 apps:
   flutter-gallery:
-    command: bin/flutter_gallery
+    command: bin/Flutter_Gallery
     extensions: [gnome-3-28]
     plugs:
       - opengl
@@ -44,21 +44,21 @@ parts:
 
   flutter-gallery:
     after: [patches, flutter]
-    source: https://github.com/flutter/flutter.git
-    source-depth: 1
-    source-subdir: examples/flutter_gallery
+    source: https://github.com/flutter/gallery.git
     plugin: nil
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version $(git describe --tags --abbrev=10)
     override-build: |
       set -eux
       snapcraftctl build
-      cd examples/flutter_gallery
       $SNAPCRAFT_STAGE/flutter/bin/flutter create --org io.flutter.examples .
       patch -p1 < $SNAPCRAFT_STAGE/disable_debug.patch
-      patch -p1 < $SNAPCRAFT_STAGE/url_launcher_fde.patch
-      patch -p1 < $SNAPCRAFT_STAGE/no_target_override.patch
+      #FIXME
+      #patch -p1 < $SNAPCRAFT_STAGE/url_launcher_fde.patch
       sed -i.bak -e 's|flutter_gallery|Flutter Gallery|g' linux/window_configuration.cc
       $SNAPCRAFT_STAGE/flutter/bin/flutter pub get
-      $SNAPCRAFT_STAGE/flutter/bin/flutter build linux --release -t lib/main_publish.dart
+      $SNAPCRAFT_STAGE/flutter/bin/flutter build linux --release -t lib/main.dart
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
       cp -r build/linux/release/* $SNAPCRAFT_PART_INSTALL/bin/
     build-packages:
