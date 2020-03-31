@@ -12,7 +12,7 @@ architectures:
 
 apps:
   flutter-gallery:
-    command: bin/Flutter_Gallery
+    command: bin/build
     extensions: [gnome-3-28]
     plugs:
       - opengl
@@ -52,11 +52,12 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
+      rm -rf linux
+      $SNAPCRAFT_STAGE/flutter/bin/flutter channel master
       $SNAPCRAFT_STAGE/flutter/bin/flutter create --org io.flutter.examples .
+      sed -i.bak -e 's|build|Flutter Gallery|g' linux/window_configuration.cc
       patch -p1 < $SNAPCRAFT_STAGE/disable_debug.patch
-      #FIXME
-      #patch -p1 < $SNAPCRAFT_STAGE/url_launcher_fde.patch
-      sed -i.bak -e 's|flutter_gallery|Flutter Gallery|g' linux/window_configuration.cc
+      patch -p1 < $SNAPCRAFT_STAGE/url_launcher_fde.patch
       $SNAPCRAFT_STAGE/flutter/bin/flutter pub get
       $SNAPCRAFT_STAGE/flutter/bin/flutter build linux --release -t lib/main.dart
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin

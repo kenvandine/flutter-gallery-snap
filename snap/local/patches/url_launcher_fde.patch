@@ -10,7 +10,7 @@ index e85d48637..6d27e4c73 100644
 +    git:
 +      url: git://github.com/google/flutter-desktop-embedding.git
 +      path: plugins/flutter_plugins/url_launcher_fde
-+      ref: 888f58887b388f5e875662e1def33f2d12696564
++      ref: 1a4d20d806517a4bd0477f67428d187bd6c4222f
 +
 +
  dev_dependencies:
