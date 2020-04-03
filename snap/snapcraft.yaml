@@ -33,6 +33,7 @@ parts:
       - git
       - unzip
       - curl
+      - rsync
     prime:
       - -flutter
 
