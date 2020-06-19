@@ -57,15 +57,14 @@ parts:
       $SNAPCRAFT_STAGE/flutter/bin/flutter channel master
       $SNAPCRAFT_STAGE/flutter/bin/flutter create --org io.flutter.examples .
       sed -i 's|build|Flutter Gallery|g' linux/window_configuration.cc
-      sed -i 's|800|1366|g' linux/window_configuration.cc
-      sed -i 's|600|768|g' linux/window_configuration.cc
-      patch -p1 < $SNAPCRAFT_STAGE/disable_debug.patch
       patch -p1 < $SNAPCRAFT_STAGE/url_launcher_fde.patch
       $SNAPCRAFT_STAGE/flutter/bin/flutter pub get
       $SNAPCRAFT_STAGE/flutter/bin/flutter build linux --release -t lib/main.dart
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-      cp -r build/linux/release/* $SNAPCRAFT_PART_INSTALL/bin/
+      cp -r build/linux/release/bundle/* $SNAPCRAFT_PART_INSTALL/bin/
     build-packages:
       - clang
+      - cmake
+      - ninja-build
     stage-packages:
       - libegl-mesa0
