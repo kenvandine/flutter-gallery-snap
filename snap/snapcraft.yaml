@@ -20,23 +20,6 @@ apps:
       __EGL_VENDOR_LIBRARY_DIRS: $SNAP/usr/share/glvnd/egl_vendor.d/
 
 parts:
-  flutter:
-    plugin: nil
-    # clone via override-build to preserve git meta
-    override-build: |
-      set -eux
-      snapcraftctl build
-      git clone -b master https://github.com/flutter/flutter.git
-      flutter/bin/flutter config --enable-linux-desktop
-      cp -r flutter $SNAPCRAFT_PART_INSTALL/
-    build-packages:
-      - git
-      - unzip
-      - curl
-      - rsync
-    prime:
-      - -flutter
-
   patches:
     source: snap/local/patches
     plugin: dump
@@ -44,7 +27,7 @@ parts:
       - -*
 
   flutter-gallery:
-    after: [patches, flutter]
+    after: [patches]
     source: https://github.com/flutter/gallery.git
     plugin: nil
     override-pull: |
@@ -54,17 +37,22 @@ parts:
       set -eux
       snapcraftctl build
       rm -rf linux
-      $SNAPCRAFT_STAGE/flutter/bin/flutter channel master
-      $SNAPCRAFT_STAGE/flutter/bin/flutter create --org io.flutter.examples .
+      flutter channel master
+      flutter config --enable-linux-desktop
+      flutter create --org io.flutter.examples .
       sed -i 's|build|Flutter Gallery|g' linux/window_configuration.cc
       patch -p1 < $SNAPCRAFT_STAGE/url_launcher_fde.patch
-      $SNAPCRAFT_STAGE/flutter/bin/flutter pub get
-      $SNAPCRAFT_STAGE/flutter/bin/flutter build linux --release -t lib/main.dart
+      flutter pub get
+      flutter build linux --release -t lib/main.dart
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
       cp -r build/linux/release/bundle/* $SNAPCRAFT_PART_INSTALL/bin/
-    build-packages:
-      - clang
-      - cmake
-      - ninja-build
+    build-snaps:
+      - flutter/latest/edge
+
+  libraries:
+    plugin: nil
     stage-packages:
       - libegl-mesa0
+    prime:
+      - usr/share/glvnd/egl_vendor.d
+      - usr/lib/*/libEGL_mesa.so.*
