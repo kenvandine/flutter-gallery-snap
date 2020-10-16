@@ -10,49 +10,24 @@ base: core18
 architectures:
   - build-on: amd64
 
+slots:
+  # for GtkApplication registration
+  flutter-gallery:
+    interface: dbus
+    bus: session
+    name: io.flutter.demo.gallery
+
 apps:
   flutter-gallery:
-    command: bin/build
-    extensions: [gnome-3-28]
+    command: bin/flutter_gallery
+    extensions: [flutter-master]
     plugs:
       - opengl
-    environment:
-      __EGL_VENDOR_LIBRARY_DIRS: $SNAP/usr/share/glvnd/egl_vendor.d/
 
 parts:
-  patches:
-    source: snap/local/patches
-    plugin: dump
-    prime:
-      - -*
-
   flutter-gallery:
-    after: [patches]
     source: https://github.com/flutter/gallery.git
-    plugin: nil
+    plugin: flutter
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version $(git describe --tags --abbrev=10)
-    override-build: |
-      set -eux
-      snapcraftctl build
-      rm -rf linux
-      flutter channel master
-      flutter config --enable-linux-desktop
-      flutter create --org io.flutter.examples .
-      sed -i 's|build|Flutter Gallery|g' linux/window_configuration.cc
-      patch -p1 < $SNAPCRAFT_STAGE/url_launcher_fde.patch
-      flutter pub get
-      flutter build linux --release -t lib/main.dart
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-      cp -r build/linux/release/bundle/* $SNAPCRAFT_PART_INSTALL/bin/
-    build-snaps:
-      - flutter/latest/edge
-
-  libraries:
-    plugin: nil
-    stage-packages:
-      - libegl-mesa0
-    prime:
-      - usr/share/glvnd/egl_vendor.d
-      - usr/lib/*/libEGL_mesa.so.*
