@@ -23,6 +23,7 @@ apps:
     extensions: [flutter-master]
     plugs:
       - opengl
+      - network
 
 parts:
   flutter-gallery:
