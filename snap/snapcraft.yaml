@@ -18,11 +18,24 @@ slots:
     name: io.flutter.demo.gallery
 
 apps:
+  daemon:
+    daemon: simple
+    restart-condition: always
+    command-chain:
+      - bin/run-daemon
+      - bin/wayland-launch
+    command: bin/flutter_gallery
+
   flutter-gallery:
+    command-chain:
+      - bin/wayland-launch
     command: bin/flutter_gallery
     extensions: [flutter-master]
+    environment:
+     GDK_BACKEND: wayland
     plugs:
       - opengl
+      - wayland
       - network
 
 parts:
@@ -32,3 +45,10 @@ parts:
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version $(git describe --tags --abbrev=10)
+
+  mir-kiosk-snap-launch:
+    plugin: dump
+    source: https://github.com/MirServer/mir-kiosk-snap-launch.git
+    override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl pulseaudio wayland
+    stage-packages:
+      - inotify-tools
