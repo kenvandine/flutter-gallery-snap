@@ -22,9 +22,14 @@ apps:
     daemon: simple
     restart-condition: always
     command-chain:
+      - snap/command-chain/desktop-launch
       - bin/run-daemon
       - bin/wayland-launch
     command: bin/flutter_gallery
+    plugs:
+      - opengl
+      - wayland
+      - network
 
   flutter-gallery:
     command: bin/flutter_gallery
@@ -45,6 +50,6 @@ parts:
   mir-kiosk-snap-launch:
     plugin: dump
     source: https://github.com/MirServer/mir-kiosk-snap-launch.git
-    override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl pulseaudio wayland
+    override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl wayland network
     stage-packages:
       - inotify-tools
