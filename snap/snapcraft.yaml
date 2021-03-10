@@ -27,15 +27,10 @@ apps:
     command: bin/flutter_gallery
 
   flutter-gallery:
-    command-chain:
-      - bin/wayland-launch
     command: bin/flutter_gallery
     extensions: [flutter-master]
-    environment:
-     GDK_BACKEND: wayland
     plugs:
       - opengl
-      - wayland
       - network
 
 parts:
