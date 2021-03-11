@@ -18,6 +18,19 @@ slots:
     name: io.flutter.demo.gallery
 
 apps:
+  daemon:
+    daemon: simple
+    restart-condition: always
+    command-chain:
+      - snap/command-chain/desktop-launch
+      - bin/run-daemon
+      - bin/wayland-launch
+    command: bin/flutter_gallery
+    plugs:
+      - opengl
+      - wayland
+      - network
+
   flutter-gallery:
     command: bin/flutter_gallery
     extensions: [flutter-master]
@@ -28,7 +41,15 @@ apps:
 parts:
   flutter-gallery:
     source: https://github.com/flutter/gallery.git
+    source-commit: dcf5088e5e3d0157d8a4d5d947cd7202ca19c941
     plugin: flutter
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version $(git describe --tags --abbrev=10)
+
+  mir-kiosk-snap-launch:
+    plugin: dump
+    source: https://github.com/MirServer/mir-kiosk-snap-launch.git
+    override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl wayland network
+    stage-packages:
+      - inotify-tools
