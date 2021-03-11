@@ -21,6 +21,8 @@ apps:
   daemon:
     daemon: simple
     restart-condition: always
+    environment:
+      LC_ALL: en_UK.UTF-8
     command-chain:
       - snap/command-chain/desktop-launch
       - bin/run-daemon
