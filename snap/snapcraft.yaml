@@ -10,13 +10,6 @@ base: core18
 architectures:
   - build-on: amd64
 
-slots:
-  # for GtkApplication registration
-  flutter-gallery:
-    interface: dbus
-    bus: session
-    name: io.flutter.demo.gallery
-
 apps:
   daemon:
     daemon: simple
@@ -44,7 +37,7 @@ apps:
 parts:
   flutter-gallery:
     source: https://github.com/flutter/gallery.git
-    source-commit: 358fe2dd7daeacc4f5397b2fc91637f79b3d95f8
+    source-commit: 9ac956114204d291959d3efe07196cb6c9bb74a7
     plugin: flutter
     override-pull: |
       snapcraftctl pull
