@@ -21,11 +21,14 @@ apps:
   daemon:
     daemon: simple
     restart-condition: always
+    environment:
+      LC_ALL: en_UK.UTF-8
+      FLUTTER_GALLERY_FULLSCREEN: 1
     command-chain:
-      - snap/command-chain/desktop-launch
       - bin/run-daemon
       - bin/wayland-launch
     command: bin/flutter_gallery
+    extensions: [flutter-master]
     plugs:
       - opengl
       - wayland
@@ -41,7 +44,7 @@ apps:
 parts:
   flutter-gallery:
     source: https://github.com/flutter/gallery.git
-    source-commit: dcf5088e5e3d0157d8a4d5d947cd7202ca19c941
+    source-commit: 358fe2dd7daeacc4f5397b2fc91637f79b3d95f8
     plugin: flutter
     override-pull: |
       snapcraftctl pull
@@ -53,3 +56,19 @@ parts:
     override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl wayland network
     stage-packages:
       - inotify-tools
+
+  assets:
+    plugin: nil
+    stage-packages:
+    - dmz-cursor-theme
+    - fonts-dejavu
+    - fonts-freefont-ttf
+    - fonts-ubuntu
+
+layout:
+  /usr/share/fonts:
+    bind: $SNAP/usr/share/fonts
+  /etc/fonts:
+    bind: $SNAP/etc/fonts
+  /usr/share/icons:
+    bind: $SNAP/usr/share/icons
