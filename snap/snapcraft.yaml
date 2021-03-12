@@ -25,10 +25,10 @@ apps:
       LC_ALL: en_UK.UTF-8
       FLUTTER_GALLERY_FULLSCREEN: 1
     command-chain:
-      - snap/command-chain/desktop-launch
       - bin/run-daemon
       - bin/wayland-launch
     command: bin/flutter_gallery
+    extensions: [flutter-master]
     plugs:
       - opengl
       - wayland
