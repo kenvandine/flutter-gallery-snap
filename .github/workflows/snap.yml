@@ -28,7 +28,7 @@ jobs:
         /snap/bin/snapcraft --use-lxd
 
         sudo snap install review-tools
-        /snap/bin/review-tools.snap-review *.snap
+        /snap/bin/review-tools.snap-review --slots snap/local/slots.json *.snap
 
         echo "::set-output name=snap-file::$( ls *.snap )"
 
