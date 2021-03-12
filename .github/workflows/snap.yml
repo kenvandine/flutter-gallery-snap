@@ -21,6 +21,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build and verify the snap
+      id: build-snap
       env:
         SNAPCRAFT_BUILD_INFO: 1
         SNAP_ENFORCE_RESQUASHFS: 0
