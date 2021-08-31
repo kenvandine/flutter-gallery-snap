@@ -8,7 +8,8 @@ confinement: strict
 base: core18
 
 architectures:
-  - build-on: [amd64, arm64]
+  - build-on: amd64
+  - build-on: arm64
 
 slots:
   # for GtkApplication registration
