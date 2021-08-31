@@ -44,7 +44,7 @@ apps:
 parts:
   flutter-gallery:
     source: https://github.com/flutter/gallery.git
-    source-commit: 358fe2dd7daeacc4f5397b2fc91637f79b3d95f8
+    source-tag: v2.9.2
     plugin: flutter
     override-pull: |
       snapcraftctl pull
