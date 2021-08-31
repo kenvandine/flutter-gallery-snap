@@ -25,6 +25,7 @@ apps:
     environment:
       LC_ALL: en_UK.UTF-8
       FLUTTER_GALLERY_FULLSCREEN: 1
+      LIBGL_ALWAYS_SOFTWARE: 1
     command-chain:
       - bin/run-daemon
       - bin/wayland-launch
