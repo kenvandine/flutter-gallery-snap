@@ -5,7 +5,7 @@ description: |
   A demo app for Flutter's material design and cupertino widgets, as well as many other features of the Flutter SDK.
 grade: stable
 confinement: strict
-base: core18
+base: core22
 
 architectures:
   - build-on: amd64
@@ -30,7 +30,7 @@ apps:
       - bin/run-daemon
       - bin/wayland-launch
     command: bin/flutter_gallery
-    extensions: [flutter-master]
+    extensions: [gnome]
     plugs:
       - opengl
       - wayland
@@ -38,24 +38,53 @@ apps:
 
   flutter-gallery:
     command: bin/flutter_gallery
-    extensions: [flutter-master]
+    extensions: [gnome]
     plugs:
       - opengl
       - network
 
 parts:
+  flutter-git:
+    source: https://github.com/flutter/flutter.git
+    source-branch: stable
+    plugin: nil
+    override-build: |
+      set -eux
+      mkdir -p $CRAFT_PART_INSTALL/usr/bin
+      mkdir -p $CRAFT_PART_INSTALL/usr/libexec
+      cp -r $CRAFT_PART_SRC $CRAFT_PART_INSTALL/usr/libexec/flutter
+      ln -sf $CRAFT_PART_INSTALL/usr/libexec/flutter/bin/flutter $CRAFT_PART_INSTALL/usr/bin/flutter
+      export PATH="$CRAFT_PART_INSTALL/usr/bin:$PATH"
+      flutter doctor
+      flutter channel stable
+      flutter upgrade
+    build-packages:
+      - clang
+      - cmake
+      - curl
+      - ninja-build
+      - unzip
+    override-prime: ''
+
   flutter-gallery:
+    after: [ flutter-git ]
     source: https://github.com/flutter/gallery.git
     source-tag: v2.9.2
-    plugin: flutter
+    plugin: nil
     override-pull: |
-      snapcraftctl pull
-      snapcraftctl set-version $(git describe --tags --abbrev=10)
+      craftctl default
+      craftctl set version=$(git describe --tags --abbrev=10)
+    override-build: |
+      set -eux
+      flutter pub get
+      flutter build linux --release -v
+      mkdir -p $CRAFT_PART_INSTALL/bin
+      cp -r build/linux/*/release/bundle/* $CRAFT_PART_INSTALL/bin/
 
   mir-kiosk-snap-launch:
     plugin: dump
     source: https://github.com/MirServer/mir-kiosk-snap-launch.git
-    override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl wayland network
+    override-build:  $CRAFT_PART_BUILD/build-with-plugs.sh opengl wayland network
     stage-packages:
       - inotify-tools
 
